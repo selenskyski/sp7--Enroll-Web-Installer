@@ -1,102 +1,115 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html>
 <head>
-  <meta charset="UTF-8">
-  <title>sp7!-Enroll Installer</title>
+  <meta charset="utf-8"/>
+  <title>sp7!-Enroll USB Config</title>
   <style>
-    body {
-      background: #0d0d0d;
-      color: #00ff9d;
-      font-family: monospace;
-      white-space: pre;
-      padding: 20px;
-    }
-    #banner {
-      font-size: 10px;
-      line-height: 10px;
-      margin-bottom: 20px;
-      white-space: pre;
-      overflow-x: auto;
-    }
-    .container {
-      white-space: normal;
-      background: #111;
-      padding: 20px;
-      border-radius: 8px;
-      margin-top: 10px;
-    }
-    select, button {
-      font-family: monospace;
-      padding: 8px;
-      background: #000;
-      border: 1px solid #00ff9d;
-      color: #00ff9d;
-      border-radius: 6px;
-      width: 100%;
-      margin-top: 10px;
-    }
-    button:hover {
-      background: #003321;
-      cursor: pointer;
-    }
+    body{font-family:system-ui,monospace;background:#0b0b0b;color:#bfffd8;padding:18px}
+    .ui{background:#0e0e0e;padding:14px;border:1px solid #0f7f56;border-radius:8px;max-width:760px}
+    label,select,button{display:block;margin:10px 0}
+    select,button{font-family:monospace;padding:8px}
+    pre{background:#050505;padding:10px;border-radius:6px;overflow:auto}
   </style>
 </head>
 <body>
+  <div class="ui">
+    <h2>sp7!-Enroll — Create USB config</h2>
 
-<div id="banner">
-,----,   ,---,                                                                     
-                             .'   .`|,`--.' |                                                                     
-                          .'   .'   ;|   :  :              ,---,.                                 ,--,    ,--,    
-            ,-.----.    ,---, '    .''   '  ;            ,'  .' |                               ,--.'|  ,--.'|    
-            \    /  \   |   :     ./ |   |  |    ,---,.,---.'   |      ,---,   __  ,-.   ,---.  |  | :  |  | :    
-  .--.--.   |   :    |  ;   | .'  /  '   :  ;  ,'  .' ||   |   .'  ,-+-. /  |,' ,'/ /|  '   ,'\ :  : '  :  : '    
- /  /    '  |   | .\ :  `---' /  ;   |   |  ',---.'   ,:   :  |-, ,--.'|'   |'  | |' | /   /   ||  ' |  |  ' |    
-|  :  /`./  .   : |: |    /  ;  /    '   :  ||   |    |:   |  ;/||   |  ,"' ||  |   ,'.   ; ,. :'  | |  '  | |    
-|  :  ;_    |   |  \ :   ;  /  /     ;   |  ;:   :  .' |   :   .'|   | /  | |'  :  /  '   | |: :|  | :  |  | :    
- \  \    `. |   : .  |  /  /  /      `---'. |:   |.'   |   |  |-,|   | |  | ||  | '   '   | .; :'  : |__'  : |__  
-  `----.   \:     |`-'./__;  /        `--..`;`---'     '   :  ;/||   | |  |/ ;  : |   |   :    ||  | '.'|  | '.'| 
- /  /`--'  /:   : :   |   : /        .--,_             |   |    \|   | |--'  |  , ;    \   \  / ;  :    ;  :    ; 
-'--'.     / |   | :   ;   |/         |    |`.          |   :   .'|   |/       ---'      `----'  |  ,   /|  ,   /  
-  `--'---'  `---'.|   `---'          `-- -`, ;         |   | ,'  '---'                           ---`-'  ---`-'   
-              `---`                    '---`"          `----'                                                     
-</div>
+    <label for="program">Choose program / ISD</label>
+    <select id="program">
+      <option value="">-- select --</option>
+      <option value="cyfair">CyFair ISD</option>
+      <option value="katy">Katy ISD</option>
+      <option value="klein">Klein ISD</option>
+      <option value="spring">Spring Branch ISD</option>
+      <option value="custom">Custom Program (enter API URL)</option>
+    </select>
 
-<div class="container">
-  <h2>sp7!-Enroll — Select Your School ISD or Program</h2>
-  
-  <label for="program">Choose your program:</label>
-  <select id="program">
-    <option value="">-- select --</option>
-    <option value="cyfair">CyFair ISD</option>
-    <option value="katy">Katy ISD</option>
-    <option value="klein">Klein ISD</option>
-    <option value="spring">Spring Branch ISD</option>
-    <option value="custom">Custom Program</option>
-  </select>
+    <div id="customArea" style="display:none">
+      <label for="apiUrl">Custom program API URL</label>
+      <input id="apiUrl" style="width:100%" placeholder="https://example.org/enroll"/>
+    </div>
 
-  <button onclick="nextStep()">Continue</button>
+    <label>
+      Student name (optional)
+      <input id="name" style="width:100%" placeholder="Your Name"/>
+    </label>
 
-  <div id="output" style="margin-top:20px; color:#88ffb7;"></div>
-</div>
+    <button id="saveBtn">Save config to USB (choose location)</button>
+    <button id="downloadBtn">Download config (choose folder or USB via Save As)</button>
+
+    <p style="margin-top:12px;color:#9f9">Tip: On Chromebooks choose your USB from the Save dialog or allow the page to write to the directory when prompted.</p>
+
+    <h4>Preview</h4>
+    <pre id="preview"></pre>
+  </div>
 
 <script>
-function nextStep() {
-  const program = document.getElementById("program").value;
-  const out = document.getElementById("output");
+const programSelect = document.getElementById('program');
+const customArea = document.getElementById('customArea');
+const apiUrl = document.getElementById('apiUrl');
+const nameInput = document.getElementById('name');
+const preview = document.getElementById('preview');
 
-  if (!program) {
-    out.textContent = "Please select a program.";
-    return;
-  }
-
-  out.textContent = "Loading configuration for: " + program + "...";
-  
-  // placeholder for real logic (API, redirects, etc.)
-  setTimeout(() => {
-    out.textContent = "Configuration loaded. You may proceed to the enrollment portal.";
-  }, 1000);
+function buildConfig() {
+  const program = programSelect.value;
+  const cfg = {
+    program: program || "custom",
+    programName: programSelect.options[programSelect.selectedIndex]?.text || "Custom Program",
+    apiUrl: apiUrl.value || "",
+    createdAt: new Date().toISOString(),
+    studentName: nameInput.value || ""
+  };
+  return cfg;
 }
-</script>
 
+function updatePreview() {
+  preview.textContent = JSON.stringify(buildConfig(), null, 2);
+}
+programSelect.addEventListener('change', () => {
+  customArea.style.display = programSelect.value === 'custom' ? 'block' : 'none';
+  updatePreview();
+});
+apiUrl.addEventListener('input', updatePreview);
+nameInput.addEventListener('input', updatePreview);
+updatePreview();
+
+// Option A: write using File System Access API (asks user to pick a directory)
+document.getElementById('saveBtn').addEventListener('click', async () => {
+  const cfg = buildConfig();
+  // Feature detect
+  if ('showDirectoryPicker' in window) {
+    try {
+      const dirHandle = await window.showDirectoryPicker();
+      // create or overwrite program.json
+      const fileHandle = await dirHandle.getFileHandle('program.json', { create: true });
+      const writable = await fileHandle.createWritable();
+      await writable.write(JSON.stringify(cfg, null, 2));
+      await writable.close();
+      alert('program.json saved in selected directory.');
+    } catch (err) {
+      console.error(err);
+      alert('Save cancelled or failed: ' + (err.message || err));
+    }
+  } else {
+    alert('Your browser does not support direct file writing. Please use "Download config" instead.');
+  }
+});
+
+// Option B: download file (user picks where to save — choose USB in the Save dialog)
+document.getElementById('downloadBtn').addEventListener('click', () => {
+  const cfg = buildConfig();
+  const blob = new Blob([JSON.stringify(cfg, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'program.json';
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+});
+</script>
 </body>
 </html>
+
