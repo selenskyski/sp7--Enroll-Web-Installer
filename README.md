@@ -24,3 +24,7 @@ sp7!-enroll enrolls your computer into a school program, but it leaves the dev-t
 ChromeOS enrollment cannot be automated or USB-injected and shouldn’t be.
 Your sp7!-Enroll tool works as a program registration system, not as ChromeOS device enrollment.
 
+## link to web installer
+```
+https://selenskyski.github.io/sp7--Enroll-Web-Installer/
+```
