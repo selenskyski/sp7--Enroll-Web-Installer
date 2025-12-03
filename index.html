@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>sp7!-Enroll Installer</title>
+  <style>
+    body {
+      background: #0d0d0d;
+      color: #00ff9d;
+      font-family: monospace;
+      white-space: pre;
+      padding: 20px;
+    }
+    #banner {
+      font-size: 10px;
+      line-height: 10px;
+      margin-bottom: 20px;
+      white-space: pre;
+      overflow-x: auto;
+    }
+    .container {
+      white-space: normal;
+      background: #111;
+      padding: 20px;
+      border-radius: 8px;
+      margin-top: 10px;
+    }
+    select, button {
+      font-family: monospace;
+      padding: 8px;
+      background: #000;
+      border: 1px solid #00ff9d;
+      color: #00ff9d;
+      border-radius: 6px;
+      width: 100%;
+      margin-top: 10px;
+    }
+    button:hover {
+      background: #003321;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+<div id="banner">
+,----,   ,---,                                                                     
+                             .'   .`|,`--.' |                                                                     
+                          .'   .'   ;|   :  :              ,---,.                                 ,--,    ,--,    
+            ,-.----.    ,---, '    .''   '  ;            ,'  .' |                               ,--.'|  ,--.'|    
+            \    /  \   |   :     ./ |   |  |    ,---,.,---.'   |      ,---,   __  ,-.   ,---.  |  | :  |  | :    
+  .--.--.   |   :    |  ;   | .'  /  '   :  ;  ,'  .' ||   |   .'  ,-+-. /  |,' ,'/ /|  '   ,'\ :  : '  :  : '    
+ /  /    '  |   | .\ :  `---' /  ;   |   |  ',---.'   ,:   :  |-, ,--.'|'   |'  | |' | /   /   ||  ' |  |  ' |    
+|  :  /`./  .   : |: |    /  ;  /    '   :  ||   |    |:   |  ;/||   |  ,"' ||  |   ,'.   ; ,. :'  | |  '  | |    
+|  :  ;_    |   |  \ :   ;  /  /     ;   |  ;:   :  .' |   :   .'|   | /  | |'  :  /  '   | |: :|  | :  |  | :    
+ \  \    `. |   : .  |  /  /  /      `---'. |:   |.'   |   |  |-,|   | |  | ||  | '   '   | .; :'  : |__'  : |__  
+  `----.   \:     |`-'./__;  /        `--..`;`---'     '   :  ;/||   | |  |/ ;  : |   |   :    ||  | '.'|  | '.'| 
+ /  /`--'  /:   : :   |   : /        .--,_             |   |    \|   | |--'  |  , ;    \   \  / ;  :    ;  :    ; 
+'--'.     / |   | :   ;   |/         |    |`.          |   :   .'|   |/       ---'      `----'  |  ,   /|  ,   /  
+  `--'---'  `---'.|   `---'          `-- -`, ;         |   | ,'  '---'                           ---`-'  ---`-'   
+              `---`                    '---`"          `----'                                                     
+</div>
+
+<div class="container">
+  <h2>sp7!-Enroll — Select Your School ISD or Program</h2>
+  
+  <label for="program">Choose your program:</label>
+  <select id="program">
+    <option value="">-- select --</option>
+    <option value="cyfair">CyFair ISD</option>
+    <option value="katy">Katy ISD</option>
+    <option value="klein">Klein ISD</option>
+    <option value="spring">Spring Branch ISD</option>
+    <option value="custom">Custom Program</option>
+  </select>
+
+  <button onclick="nextStep()">Continue</button>
+
+  <div id="output" style="margin-top:20px; color:#88ffb7;"></div>
+</div>
+
+<script>
+function nextStep() {
+  const program = document.getElementById("program").value;
+  const out = document.getElementById("output");
+
+  if (!program) {
+    out.textContent = "Please select a program.";
+    return;
+  }
+
+  out.textContent = "Loading configuration for: " + program + "...";
+  
+  // placeholder for real logic (API, redirects, etc.)
+  setTimeout(() => {
+    out.textContent = "Configuration loaded. You may proceed to the enrollment portal.";
+  }, 1000);
+}
+</script>
+
+</body>
+</html>
